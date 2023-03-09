@@ -45,7 +45,10 @@ public class JellyTele extends BaseOpMode {
             }
             // precision
             double mult = gamepad1.left_bumper ? 0.35 : gamepad1.right_bumper ? 0.7 : 1.0;
-
+            // IMU Reset
+            if (gamepad1.options) {
+                imu.resetYaw();
+            }
             telemetry.addData("drive mode", driveMode);
             telemetry.addData("mX", gamepad2.left_stick_x);
             telemetry.addData("mY", gamepad2.left_stick_y);
