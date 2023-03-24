@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -19,13 +18,12 @@ public class JellyTele extends BaseOpMode {
     }
     protected DriveMode driveMode = DriveMode.FIELDCENTRIC;
     public void runOpMode() throws InterruptedException {
-        // Retrieve the IMU from the hardware map
+        // FIELD CENTRIC
         IMU imu = hardwareMap.get(IMU.class, "imu");
-        // Adjust the orientation parameters to match your robot
+        // ADJUST ORIENTATION PARAMETERS TO MATCH THE ROBOT
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
         initHardware();
         waitForStart();
@@ -48,21 +46,18 @@ public class JellyTele extends BaseOpMode {
             }
             // PRECISION
             double mult = gamepad1.left_bumper ? 0.35 : gamepad1.right_bumper ? 0.7 : 1.0;
-            if (gamepad1.left_bumper){
-                gamepad1.rumble( 1, 1, 10);
-            }
-            if (gamepad1.right_bumper){
-                gamepad1.rumble(2.7,2.7,10);
-            }
+            // IMU RESET
             if (gamepad1.y && gamepad1.back){
                 imu.resetYaw();
                 gamepad1.rumbleBlips(5);
             }
+            // TELEMETRY
             telemetry.addData("drive mode", driveMode);
             telemetry.addData("mX", gamepad2.left_stick_x);
             telemetry.addData("mY", gamepad2.left_stick_y);
             telemetry.addData("precision mode", mult);
             telemetry.update();
+            // DRIVE MODE
             switch (driveMode) {
                 case TANK: {
                     double l = -gamepad1.left_stick_y,
@@ -83,8 +78,8 @@ public class JellyTele extends BaseOpMode {
                 case MECANUM: {
                     double pivot = gamepad1.right_stick_x;
                     double mX, mY;
-                    mX = gamepad1.left_stick_x;
-                    mY = -gamepad1.left_stick_y;
+                    mX = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+                    mY = -gamepad1.left_stick_y; // Remember, this is reversed!
                     setMotorSpeeds(mult, new double[] {
                         mY - mX - pivot,
                         mY + mX - pivot,
@@ -110,6 +105,7 @@ public class JellyTele extends BaseOpMode {
                     break;
                 }
             }
+            // CLAW
             if(gamepad2.right_bumper){
                 Claws.clawsClose();
             }
@@ -118,7 +114,6 @@ public class JellyTele extends BaseOpMode {
             }
         }
     }
-    // CLAW
 
     // PRECISION METHOD
     protected void setMotorSpeeds(double mult, double[] powers) {
