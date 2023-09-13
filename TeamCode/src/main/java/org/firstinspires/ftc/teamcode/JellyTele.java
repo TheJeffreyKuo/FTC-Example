@@ -6,17 +6,15 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
-import org.firstinspires.ftc.teamcode.Framework.Claws;
 
 @TeleOp(name = "Power Play JellyTele")
 public class JellyTele extends BaseOpMode {
     protected enum DriveMode {
-        TANK,
-        DRIVE,
-        MECANUM,
-        FIELDCENTRIC,
+        TANK, DRIVE, MECANUM, FIELDCENTRIC,
     }
+
     protected DriveMode driveMode = DriveMode.FIELDCENTRIC;
+
     public void runOpMode() throws InterruptedException {
         // FIELD CENTRIC
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -26,6 +24,8 @@ public class JellyTele extends BaseOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
         initHardware();
+
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -39,15 +39,14 @@ public class JellyTele extends BaseOpMode {
             } else if (gamepad1.dpad_right) {
                 driveMode = DriveMode.DRIVE;
                 gamepad1.rumbleBlips(3);
-            }
-            else if (gamepad1.dpad_down) {
+            } else if (gamepad1.dpad_down) {
                 driveMode = DriveMode.FIELDCENTRIC;
                 gamepad1.rumbleBlips(4);
             }
             // PRECISION
             double mult = gamepad1.left_bumper ? 0.35 : gamepad1.right_bumper ? 0.7 : 1.0;
             // IMU RESET
-            if (gamepad1.y && gamepad1.back){
+            if (gamepad1.y && gamepad1.back) {
                 imu.resetYaw();
                 gamepad1.rumbleBlips(5);
             }
@@ -61,17 +60,17 @@ public class JellyTele extends BaseOpMode {
             switch (driveMode) {
                 case TANK: {
                     double l = -gamepad1.left_stick_y,
-                        r = -gamepad1.right_stick_y;
-                    setMotorSpeeds(mult, new double[] {r, r, l, l});
+                            r = -gamepad1.right_stick_y;
+                    setMotorSpeeds(mult, new double[]{r, r, l, l});
                     break;
                 }
                 case DRIVE: {
                     double pivot = gamepad1.left_stick_x, y = -gamepad1.left_stick_y;
-                    setMotorSpeeds(mult, new double[] {
-                        y-pivot,
-                        y-pivot,
-                        y+pivot,
-                        y+pivot
+                    setMotorSpeeds(mult, new double[]{
+                            y - pivot,
+                            y - pivot,
+                            y + pivot,
+                            y + pivot
                     });
                     break;
                 }
@@ -80,11 +79,11 @@ public class JellyTele extends BaseOpMode {
                     double mX, mY;
                     mX = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
                     mY = -gamepad1.left_stick_y; // Remember, this is reversed!
-                    setMotorSpeeds(mult, new double[] {
-                        mY - mX - pivot,
-                        mY + mX - pivot,
-                        mY + mX + pivot,
-                        mY - mX + pivot});
+                    setMotorSpeeds(mult, new double[]{
+                            mY - mX - pivot,
+                            mY + mX - pivot,
+                            mY + mX + pivot,
+                            mY - mX + pivot});
                     break;
                 }
                 case FIELDCENTRIC: {
@@ -97,7 +96,7 @@ public class JellyTele extends BaseOpMode {
                     // Rotate the movement direction counter to the bot's rotation
                     double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
                     double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-                    setMotorSpeeds(mult, new double[] {
+                    setMotorSpeeds(mult, new double[]{
                             rotY - rotX - rx,
                             rotY + rotX - rx,
                             rotY + rotX + rx,
@@ -106,11 +105,11 @@ public class JellyTele extends BaseOpMode {
                 }
             }
             // CLAW
-            if(gamepad2.right_bumper){
-                Claws.clawsClose();
+            if (gamepad2.right_bumper) {
+                claws.clawsClose();
             }
-            if(gamepad2.left_bumper){
-                Claws.clawsOpen();
+            if (gamepad2.left_bumper) {
+                claws.clawsOpen();
             }
         }
     }

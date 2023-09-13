@@ -6,9 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class BaseOpMode extends LinearOpMode {
-        protected DcMotor[] motors;
-        protected Servo claw;
-        protected void initHardware() {
+    protected DcMotor[] motors;
+    protected Claw claws;
+
+    protected void initHardware() {
         motors = new DcMotor[]{
                 hardwareMap.dcMotor.get("motor fr"),
                 hardwareMap.dcMotor.get("motor br"),
@@ -20,6 +21,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         motors[2].setDirection(DcMotorSimple.Direction.FORWARD);
         motors[3].setDirection(DcMotorSimple.Direction.FORWARD);
 
-        claw = hardwareMap.get(Servo.class, "servo");
+        Servo claw = hardwareMap.get(Servo.class, "servo");
+        claws = new Claw(claw);
     }
 }
