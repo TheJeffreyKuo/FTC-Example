@@ -4,8 +4,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
 
-    private Servo claw;
+    // Variable Definition
+    protected Servo claw;
 
+    // Dependency Injection - The Claw class is being passed a Servo object as a dependency through its constructor
+    // Constructor - Variable you created above is initialized through the constructor
     public Claw(Servo servo) {
         this.claw = servo;
     }

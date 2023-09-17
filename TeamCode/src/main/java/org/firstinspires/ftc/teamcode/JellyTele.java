@@ -55,6 +55,7 @@ public class JellyTele extends BaseOpMode {
             telemetry.addData("mX", gamepad2.left_stick_x);
             telemetry.addData("mY", gamepad2.left_stick_y);
             telemetry.addData("precision mode", mult);
+            telemetry.addData("Claw Position", claws.getCurrentPosition());
             telemetry.update();
             // DRIVE MODE
             switch (driveMode) {
