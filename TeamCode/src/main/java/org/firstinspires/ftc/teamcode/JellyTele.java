@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Framework.AntiTipping;
 import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
 @TeleOp(name = "Power Play JellyTele")
@@ -16,16 +15,9 @@ public class JellyTele extends BaseOpMode {
     protected DriveMode driveMode = DriveMode.FIELDCENTRIC;
 
     public void runOpMode() throws InterruptedException {
-        // FIELD CENTRIC
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        // ADJUST ORIENTATION PARAMETERS TO MATCH THE ROBOT
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        imu.initialize(parameters);
+        AntiTipping antiTipping = new AntiTipping(motors, imu);
+        // Init hardware from BaseOpMode
         initHardware();
-
-
         waitForStart();
 
         while (opModeIsActive()) {
@@ -112,6 +104,19 @@ public class JellyTele extends BaseOpMode {
             if (gamepad2.left_bumper) {
                 claws.clawsOpen();
             }
+            // Update Anti-Tipping
+            antiTipping.correctTilt();
+            // Manuel Joystick control
+            slides.setTargetPosition(slides.getTargetPosition() + (int) (gamepad2.left_stick_y * 0.5));
+            // Preset positions
+            if(gamepad2.a){
+                slides.setTargetPosition(0);
+            }
+            if(gamepad2.b){
+                slides.setTargetPosition(100);
+            }
+            // Updating the slide power using the PID controller inside the loop
+            slides.update();
         }
     }
 

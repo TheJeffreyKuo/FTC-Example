@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Framework;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class BaseOpMode extends LinearOpMode {
@@ -9,6 +11,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     protected DcMotor[] motors;
     protected Claw claws;
     protected Slides slides;
+    protected IMU imu;
     // Method to initialize hardware components in OpModes
     protected void initHardware() {
         // Motor initialization by getting them from the hardwareMap in array
@@ -34,5 +37,12 @@ public abstract class BaseOpMode extends LinearOpMode {
         DcMotor leftSlideMotor = hardwareMap.get(DcMotor.class, "leftSlideMotor");
         DcMotor rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         slides = new Slides(leftSlideMotor, rightSlideMotor);
+
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+        // ADJUST ORIENTATION PARAMETERS TO MATCH THE ROBOT
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        imu.initialize(parameters);
     }
 }
