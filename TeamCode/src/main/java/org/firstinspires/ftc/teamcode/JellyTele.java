@@ -140,7 +140,7 @@ public class JellyTele extends BaseOpMode {
         }
     }
     protected double DEADBAND(double DEADBAND, double stickVal) {
-        double DB = stickVal >= -DEADBAND || stickVal <= DEADBAND ? 0 : (stickVal - DEADBAND) * Math.signum(stickVal);
+        double DB = stickVal >= -DEADBAND && stickVal <= DEADBAND ? 0 : (stickVal - DEADBAND) * Math.signum(stickVal);
         return DB;
     }
 }
