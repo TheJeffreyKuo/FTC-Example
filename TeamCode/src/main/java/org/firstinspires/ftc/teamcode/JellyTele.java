@@ -68,10 +68,10 @@ public class JellyTele extends BaseOpMode {
                     break;
                 }
                 case MECANUM: {
-                    double pivot = gamepad1.right_stick_x;
+                    double pivot = DEADBAND(0.02,gamepad1.right_stick_x);
                     double mX, mY;
-                    mX = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-                    mY = -gamepad1.left_stick_y; // Remember, this is reversed!
+                    mX = DEADBAND(0.02,gamepad1.left_stick_x) * 1.1; // Counteract imperfect strafing
+                    mY = -DEADBAND(0.02,gamepad1.left_stick_y); // Remember, this is reversed!
                     setMotorSpeeds(mult, new double[]{
                             mY - mX - pivot,
                             mY + mX - pivot,
@@ -138,5 +138,9 @@ public class JellyTele extends BaseOpMode {
         for (int i = 0; i < 4; i++) {
             motors[i].setPower(powers[i]);
         }
+    }
+    protected double DEADBAND(double DEADBAND, double stickVal) {
+        double DB = stickVal >= -DEADBAND || stickVal <= DEADBAND ? 0 : (stickVal - DEADBAND) * Math.signum(stickVal);
+        return DB;
     }
 }
