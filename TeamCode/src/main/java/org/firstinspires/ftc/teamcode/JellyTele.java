@@ -146,7 +146,7 @@ public class JellyTele extends BaseOpMode {
     }
 
     //Rising Edge Detector
-    public boolean detectRisingEdge(boolean current, boolean previous) {
+    public boolean risingEdgeDetect(boolean current, boolean previous) {
         return current && !previous;
     }
 }
