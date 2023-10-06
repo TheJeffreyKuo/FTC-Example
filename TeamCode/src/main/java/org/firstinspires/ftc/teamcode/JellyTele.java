@@ -139,8 +139,14 @@ public class JellyTele extends BaseOpMode {
             motors[i].setPower(powers[i]);
         }
     }
+    // Deadband
     protected double DEADBAND(double DEADBAND, double stickVal) {
         double DB = stickVal >= -DEADBAND && stickVal <= DEADBAND ? 0 : (stickVal - DEADBAND) * Math.signum(stickVal);
         return DB;
+    }
+
+    //Rising Edge Detector
+    public boolean detectRisingEdge(boolean current, boolean previous) {
+        return current && !previous;
     }
 }
